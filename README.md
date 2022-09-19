@@ -154,7 +154,7 @@ void mousePressed(){
 }
 ```
 
-### 5-1. 剛剛的程式 將mousePressed 換成 mouseDragged(滑鼠左鍵拖拉): 交換牌
+### 5-2. 剛剛的程式 將mousePressed 換成 mouseDragged(滑鼠左鍵拖拉): 交換牌
 ```c
 void setup(){
   size(800,600);
