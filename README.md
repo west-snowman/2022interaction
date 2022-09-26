@@ -250,12 +250,213 @@ void drawPokerCard(int x, int y, String face){
 ```
 
 ## 9/26
-### 1. 
+### 彈珠遊戲
+### 1. 做一顆球往右上移動(影像會重疊...)
 ```c
-
+void setup(){
+  size(500,500);
+}
+int x=250, y=250;//變數(位置)
+void draw(){
+  ellipse(x, y, 10, 10);//橢圓形
+  x = x + 1; //往右跑
+  y = y - 1; //往上跑
+}
 ```
 
-### 2. 
+### 2. 球撞到四周的牆會反彈
 ```c
-
+void setup(){
+  size(500,500);
+}
+float x=250, y=250;//變數(位置)，浮點數數值會比較細緻
+float vx=1.0, vy=-0.5;
+void draw(){
+  ellipse(x, y, 10, 10);//橢圓形
+  x = x + vx; //往右跑
+  y = y + vy; //往上跑
+  if( x > 500 ) vx = -vx;
+  if( y < 0 ) vy = -vy;
+  if( x < 0 ) vx = -vx;
+  if( y > 500 ) vy = -vy;
+}
 ```
+
+### 3. 多一個反彈的板子
+```c
+void setup(){
+  size(500,500);
+}
+float x=250, y=250;//變數(位置)，浮點數數值會比較細緻
+float vx=2.0, vy=-1.5;
+void draw(){
+  background(#FFFFF2); //背景，去除殘影
+  int boardX = mouseX;
+  rect(boardX, 470, 100, 20, 3); //控制的板子
+  ellipse(x, y, 10, 10);//橢圓形
+  x = x + vx; //往右跑
+  y = y + vy; //往上跑
+  if( x > 500 ) vx = -vx;
+  if( y < 0 ) vy = -vy;
+  if( x < 0 ) vx = -vx;
+  if( y > 470 && x>boardX && x<boardX+100) vy = -vy;
+}
+```
+
+### 4. 精化程式碼 and 按滑鼠左右鍵板子可以變長變短
+```c
+void setup(){
+  size(500,500);
+}
+float x=250, y=250;//變數(位置)，浮點數數值會比較細緻
+float vx=2.0, vy=-1.5;
+float boardX, boardY=470, boardW=100, boardH=20;
+void draw(){
+  background(#FFFFF2); //背景，去除殘影
+  boardX = mouseX-boardW/2; //讓滑鼠在板子中間移動
+  rect(boardX, boardY, boardW, boardH, 3); //控制的板子
+  ellipse(x, y, 10, 10);//橢圓形
+  x = x + vx; //往右跑
+  y = y + vy; //往上跑
+  if( x > 500 ) vx = -vx;
+  if( y < 0 ) vy = -vy;
+  if( x < 0 ) vx = -vx;
+  if(( y > boardY && y < boardY + boardH ) && 
+     ( x > boardX && x < boardX + boardW )){ //x->跟板子的長度有關
+       vy = -vy; 
+       vx += (mouseX-pmouseX)/2; ///mouse的移動速度
+     }
+  if(mousePressed && mouseButton==LEFT) boardW *= 1.01;
+  if(mousePressed && mouseButton==RIGHT) boardW *= 0.99;
+}
+```
+### 圍棋
+### 5. 
+```c
+void setup(){
+  size(500,500);
+}
+
+void draw(){
+  //用迴圈畫很多棋子
+  for(int x=50; x<=450; x+=50){
+    for(int y=50; y<=450; y+=50){
+      ellipse(x, y, 50, 50);
+    }
+  }
+}
+```
+
+### 6. 用陣列畫圓+顏色
+```c
+void setup(){
+  size(500,500);
+}
+int [][]go = {
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,1,0,0,0,0},
+  {0,0,0,0,0,0,0,0,1},
+  {0,1,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,1,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,1,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+};
+void draw(){
+  //用迴圈畫很多棋子
+  for(int i=0; i<9; i++){ //左手i，對應y座標
+    for(int j=0; j<9; j++){ //右手j，對應x座標
+      if(go[i][j]==1) fill(0);
+      else fill(255);
+      //        x         y
+      ellipse(50+j*50, 50+i*50, 50, 50);
+    }
+  }
+}
+```
+
+### 7. 畫出棋盤上的線
+```c
+void setup(){
+  size(500,500);
+}
+int [][]go = {
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,1,0,2,0,0},
+  {0,0,0,0,0,0,0,0,1},
+  {0,1,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,1,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,1,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+};
+void draw(){
+  background(246, 194, 108); ///棋盤顏色
+  for(int i=1; i<=9; i++){ //迴圈
+    line(50, 50*i, 450, 50*i); //橫線
+    line(50*i, 50, 50*i, 450); //縱線
+  }
+  
+  for(int i=0; i<9; i++){ //左手i，對應y座標
+    for(int j=0; j<9; j++){ //右手j，對應x座標
+      if(go[i][j]==1){
+        fill(0); //黑棋
+        ellipse(50+j*50, 50+i*50, 40, 40);
+      }
+      else if(go[i][j]==2){
+        fill(255); //白棋
+        ellipse(50+j*50, 50+i*50, 40, 40);
+      }
+    }
+  }
+}
+```
+
+### 8. 可以互動的玩五圍棋了~
+```c
+void setup(){
+  size(500,500);
+}
+int [][]go = {
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0},
+};
+int N=0; //目前有幾個棋子
+void mousePressed(){
+  int j = (mouseX-25)/50; //右手j，對應x座標
+  int i = (mouseY-25)/50; //左手i，對應y座標
+  go[i][j] = (N%2==0) ? 1 : 2 ; //if(N%2==0) 用1，否則2
+  N++;
+}
+
+void draw(){
+  background(246, 194, 108); ///棋盤顏色
+  for(int i=1; i<=9; i++){ //迴圈
+    line(50, 50*i, 450, 50*i); //橫線
+    line(50*i, 50, 50*i, 450); //縱線
+  }
+  
+  for(int i=0; i<9; i++){ //左手i，對應y座標
+    for(int j=0; j<9; j++){ //右手j，對應x座標
+      if(go[i][j]==1){
+        fill(0); //黑棋
+        ellipse(50+j*50, 50+i*50, 40, 40);
+      }
+      else if(go[i][j]==2){
+        fill(255); //白棋
+        ellipse(50+j*50, 50+i*50, 40, 40);
+      }
+    }
+  }
+}
+```
+
