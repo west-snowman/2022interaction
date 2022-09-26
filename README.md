@@ -3,7 +3,6 @@
  
  將java改成p5.js https://pde2js.herokuapp.com/
 
-
 ## 9/19
 ### 0. 複製上週程式
 ### 1. 加上myShuffle函式
@@ -248,4 +247,15 @@ void drawPokerCard(int x, int y, String face){
   textSize(30);
   text(face, x+10,y+35);
 }
+```
+
+## 9/26
+### 1. 
+```c
+
+```
+
+### 2. 
+```c
+
 ```
